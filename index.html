@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Grammar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 font-weight=%22bold%22 fill=%22%230d6efd%22>E</text></svg>">
+  <style>
+    /* Full màn hình, không scroll toàn trang */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #f8f9fa;
+    }
+
+    .nav-tabs .nav-link {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .tab-content {
+      height: calc(100vh - 60px); /* trừ chiều cao tab */
+    }
+
+    /* Cột trái: card full chiều cao, accordion có scroll riêng */
+    #leftPanel {
+      height: 100%;
+      padding: 0;
+    }
+
+    #leftPanel .card {
+      height: 100%;
+      margin: 0;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    #leftPanel .card-header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+    }
+
+    #leftPanel .card-body {
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #theoryAccordion {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .topic-item {
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .topic-item:hover {
+      background-color: #e7f1ff !important;
+    }
+
+    .topic-item.selected {
+      background-color: #cfe2ff !important;
+      border-left: 4px solid #0d6efd;
+      font-weight: 600;
+    }
+
+    .topic-item .text-primary { font-size: 1.2rem; }
+
+    /* Cột phải: full chiều cao, chỉ iframe cuộn */
+    #theoryContent {
+      height: 100%;
+      background: white;
+      border-left: 1px solid #dee2e6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #theoryContent iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    #theoryPlaceholder {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    #theoryContent.has-content #theoryPlaceholder {
+      display: none !important;
+    }
+
+    /* Practice tab full iframe */
+    #practiceTab iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .h-100 {
+      height: calc(100vh - 60px) !important;
+    }
+
+    /* Nút tìm kiếm lơ lửng */
+    .search-float-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 20px;
+      z-index: 1000;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #0d6efd;
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .search-float-btn:hover {
+      background: #0b5ed7;
+      transform: scale(1.1);
+    }
+    
+    /* Modal tìm kiếm */
+    .search-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1050;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 100px;
+    }
+    
+    .search-modal.show { display: flex; }
+    
+    .search-modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    
+    .search-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #dee2e6;
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .search-header input {
+      flex: 1;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+    }
+    
+    .search-header input:focus {
+      outline: none;
+      border-color: #0d6efd;
+    }
+    
+    .search-results {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    
+    .search-result-item {
+      padding: 1rem;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .search-result-item:hover {
+      background: #f8f9fa;
+    }
+    
+    .search-result-item .topic-name {
+      font-weight: 600;
+      color: #0d6efd;
+      margin-bottom: 0.25rem;
+    }
+    
+    .search-result-item .topic-desc {
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+    
+    .search-no-results {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6c757d;
+    }
+
+    #irregularVerbsFrame {
+        width: 100% !important;
+        height: calc(100vh - 60px) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tab điều hướng -->
+  <ul class="nav nav-tabs sticky-top bg-white border-bottom" id="mainTabs" role="tablist">
+    <li class="nav-item flex-fill text-center">
+      <button class="nav-link active w-100" data-bs-toggle="tab" data-bs-target="#theoryTab">Lý thuyết</button>
+    </li>
+    <li class="nav-item flex-fill text-center">
+      <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#practiceTab">Luyện tập</button>
+    </li>
+    <li class="nav-item flex-fill text-center">
+      <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#irregularVerbsTab">Động từ bất quy tắc</button>
+    </li>
+  </ul>
+
+  <div class="tab-content h-100">
+    <!-- TAB LÝ THUYẾT -->
+    <div class="tab-pane fade show active h-100" id="theoryTab">
+      <div class="row g-0 h-100">
+        <!-- Cột trái: chọn chủ đề -->
+        <div class="col-lg-4" id="leftPanel">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="accordion" id="theoryAccordion"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột phải: hiển thị lý thuyết -->
+        <div class="col-lg-8">
+          <div id="theoryContent">
+            <div id="theoryPlaceholder">
+              <div class="text-center text-muted" style="padding: 3rem 2rem; max-width: 600px; margin: 0 auto;">
+                <h3 style="color: #495057; margin-bottom: 1rem;">Học Ngữ Pháp Tiếng Anh</h3>
+                <p style="font-size: 1rem; line-height: 1.6; color: #6c757d; margin-bottom: 1.5rem;">
+                  Hệ thống học ngữ pháp toàn diện với lý thuyết chi tiết, bài tập thực hành và bảng động từ bất quy tắc.
+                </p>
+                <div style="text-align: left; background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 2rem;">
+                  <h5 style="color: #495057; margin-bottom: 1rem;">💡 Hướng dẫn sử dụng:</h5>
+                  <ul style="color: #6c757d; line-height: 1.8; padding-left: 1.5rem;">
+                    <li><strong>Lý thuyết:</strong> Chọn chủ đề bên trái để xem nội dung chi tiết</li>
+                    <li><strong>Luyện tập:</strong> Chuyển sang tab "Luyện tập" để làm bài tập</li>
+                    <li><strong>Động từ bất quy tắc:</strong> Tra cứu nhanh các động từ bất quy tắc</li>
+                    <li><strong>Tìm kiếm:</strong> Dùng nút 🔍 góc phải để tìm chủ đề nhanh</li>
+                  </ul>
+                </div>
+                <p style="margin-top: 2rem; color: #0d6efd; font-weight: 500;">
+                  ← Bắt đầu bằng cách chọn một chủ đề bên trái
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB LUYỆN TẬP -->
+    <div class="tab-pane fade h-100" id="practiceTab">
+      <iframe src="practice.html"></iframe>
+    </div>
+    <!-- TAB ĐỘNG TỪ BẤT QUY TẮC -->
+    <div class="tab-pane fade h-100" id="irregularVerbsTab">
+      <iframe id="irregularVerbsFrame" src="irregular_verbs.html"></iframe>
+    </div>
+  </div>
+    <!-- Nút tìm kiếm lơ lửng -->
+    <button class="search-float-btn" onclick="openSearchModal()" title="Tìm kiếm">
+        🔍
+    </button>
+
+    <!-- Modal tìm kiếm -->
+    <div class="search-modal" id="searchModal" onclick="closeSearchModal(event)">
+        <div class="search-modal-content" onclick="event.stopPropagation()">
+        <div class="search-header">
+            <input type="text" id="searchInput" placeholder="Nhập từ khóa tìm kiếm..." 
+                onkeyup="handleSearch(event)" autofocus>
+            <button class="btn btn-secondary" onclick="closeSearchModal()">✕</button>
+        </div>
+        <div class="search-results" id="searchResults">
+            <div class="search-no-results">Nhập từ khóa để tìm kiếm</div>
+        </div>
+        </div>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="topics.js"></script>
+  <script>
+    function loadTheoryAccordion() {
+      const accordion = document.getElementById('theoryAccordion');
+      accordion.innerHTML = '';
+
+      topicsConfig.forEach((group, groupIndex) => {
+        const groupId = `theoryGroup${group.groupId}`;
+        const item = document.createElement('div');
+        item.className = 'accordion-item';
+        item.innerHTML = `
+          <h2 class="accordion-header">
+            <button class="accordion-button ${groupIndex === 0 ? 'collapsed' : 'collapsed'}" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#${groupId}">
+              ${group.groupName}
+            </button>
+          </h2>
+          <div id="${groupId}" class="accordion-collapse collapse ${groupIndex === 0 ? '' : ''}"
+               data-bs-parent="#theoryAccordion">
+            <div class="accordion-body p-0">
+              ${group.topics.map(topic => `
+                <div class="topic-item" onclick="loadTheory(${topic.id})">
+                  <div class="d-flex align-items-center">
+                    <div class="me-3 text-primary">▶</div>
+                    <div>
+                      <div class="fw-500">${topic.name} - ${topic.nameVi}</div>
+                      <small class="text-muted">${topic.description}</small>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        accordion.appendChild(item);
+      });
+    }
+
+    function openSearchModal() {
+        document.getElementById('searchModal').classList.add('show');
+        document.getElementById('searchInput').focus();
+        }
+
+        function closeSearchModal(event) {
+        if (!event || event.target.id === 'searchModal') {
+            document.getElementById('searchModal').classList.remove('show');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '<div class="search-no-results">Nhập từ khóa để tìm kiếm</div>';
+        }
+        }
+
+        function handleSearch(event) {
+        if (event.key === 'Escape') {
+            closeSearchModal();
+            return;
+        }
+
+        const keyword = event.target.value.trim().toLowerCase();
+        const resultsDiv = document.getElementById('searchResults');
+
+        if (!keyword) {
+            resultsDiv.innerHTML = '<div class="search-no-results">Nhập từ khóa để tìm kiếm</div>';
+            return;
+        }
+
+        // Tìm trong topics
+        const allTopics = topicsConfig.flatMap(group => 
+            group.topics.map(topic => ({...topic, groupName: group.groupName}))
+        );
+
+        const results = allTopics.filter(topic => 
+            topic.name.toLowerCase().includes(keyword) ||
+            topic.nameVi.toLowerCase().includes(keyword) ||
+            topic.description.toLowerCase().includes(keyword)
+        );
+
+        if (results.length === 0) {
+            resultsDiv.innerHTML = '<div class="search-no-results">Không tìm thấy kết quả nào</div>';
+            return;
+        }
+
+        resultsDiv.innerHTML = results.map(topic => `
+            <div class="search-result-item" onclick="goToTopic(${topic.id})">
+            <div class="topic-name">${topic.name} - ${topic.nameVi}</div>
+            <div class="topic-desc">${topic.description}</div>
+            <small class="text-muted">${topic.groupName}</small>
+            </div>
+        `).join('');
+        }
+
+        function goToTopic(topicId) {
+        closeSearchModal();
+        
+        // Chuyển sang tab Lý thuyết
+        const theoryTab = document.querySelector('[data-bs-target="#theoryTab"]');
+        theoryTab.click();
+        
+        // Đợi tab load xong
+        setTimeout(() => {
+            // Tìm topic trong accordion
+            const topic = topicsConfig.flatMap(g => g.topics).find(t => t.id === topicId);
+            if (!topic) return;
+
+            // Mở accordion group chứa topic
+            const groupId = topicsConfig.find(g => g.topics.some(t => t.id === topicId))?.groupId;
+            const collapseEl = document.getElementById(`theoryGroup${groupId}`);
+            if (collapseEl && !collapseEl.classList.contains('show')) {
+            const bsCollapse = new bootstrap.Collapse(collapseEl, { toggle: true });
+            }
+
+            // Đợi accordion mở xong rồi click vào topic
+            setTimeout(() => {
+            const topicItems = document.querySelectorAll('.topic-item');
+            topicItems.forEach(item => {
+                if (item.onclick.toString().includes(`loadTheory(${topicId})`)) {
+                item.click();
+                item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+            }, 300);
+        }, 100);
+        }
+
+    function loadTheory(topicId) {
+      document.querySelectorAll('.topic-item').forEach(el => el.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+
+      const topic = topicsConfig.flatMap(g => g.topics).find(t => t.id === topicId);
+      if (!topic) return;
+
+      const fileName = topic.file.replace('.js', '.html');
+      const url = `htmls/${fileName}`;
+      const content = document.getElementById('theoryContent');
+
+      content.innerHTML = `<iframe src="${url}" onload="this.parentElement.classList.add('has-content'); this.style.opacity=1" style="opacity:0; transition: opacity 0.4s;"></iframe>`;
+      content.classList.add('has-content');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTheoryAccordion();
+    });
+  </script>
+</body>
+</html>
