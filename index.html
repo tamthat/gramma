@@ -306,6 +306,86 @@
     height: calc(55vh - 60px) !important;
   }
 }
+    /* ================== MOBILE & TABLET – TỈ LỆ 1/3 TRÊN + 2/3 DƯỚI (HOÀN HẢO) ================== */
+@media (max-width: 991.98px) {
+  /* Chuyển sang layout dọc hoàn toàn */
+  #theoryTab .row.g-0 {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+
+  #leftPanel,
+  .col-lg-8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  /* === DANH SÁCH CHỦ ĐỀ: chính xác 1/3 màn hình (trừ tab 60px) === */
+  #leftPanel {
+    height: calc(33.333vh - 20px) !important;   /* 1/3 màn hình trừ đi 60px tab + chút margin */
+    min-height: 280px;
+    max-height: 40vh;
+    border-bottom: 1px solid #dee2e6;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Đảm bảo accordion bên trái cuộn được */
+  #theoryAccordion {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* cuộn mượt trên iOS */
+  }
+
+  /* === NỘI DUNG LÝ THUYẾT: chính xác 2/3 màn hình còn lại === */
+  .col-lg-8 {
+    height: calc(66.666vh - 40px) !important;   /* 2/3 còn lại */
+    min-height: 400px;
+  }
+
+  #theoryContent,
+  #theoryContent iframe {
+    height: 100% !important;
+  }
+
+  /* Placeholder khi chưa chọn chủ đề */
+  #theoryPlaceholder {
+    height: 100%;
+    padding: 2rem 1.5rem;
+  }
+
+  /* Bỏ ràng buộc overflow toàn trang trên mobile */
+  html, body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .tab-content,
+  #theoryTab {
+    height: auto !important;
+    min-height: 100vh;
+  }
+
+  /* Nút tìm kiếm hạ thấp hơn chút cho dễ bấm bằng ngón cái */
+  .search-float-btn {
+    bottom: 90px;
+    right: 18px;
+  }
+}
+
+/* Tablet dọc (768–991px): hơi nới lỏng một chút cho đẹp hơn */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  #leftPanel {
+    height: calc(35vh - 20px) !important;
+  }
+  .col-lg-8 {
+    height: calc(65vh - 40px) !important;
+  }
+}
   </style>
 </head>
 <body>
