@@ -226,6 +226,86 @@
         width: 100% !important;
         height: calc(100vh - 60px) !important;
     }
+
+/* ================== MOBILE & TABLET FIX - QUAN TRỌNG NHẤT ================== */
+@media (max-width: 991.98px) {
+  /* 1. Khi màn hình nhỏ: chuyển sang layout dọc 100% */
+  #theoryTab .row.g-0 {
+    flex-direction: column !important;
+  }
+
+  #leftPanel,
+  #theoryContent .col-lg-8 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  /* 2. Cột trái (danh sách chủ đề) chiếm 40% chiều cao màn hình, có thể cuộn riêng */
+  #leftPanel {
+    height: 40vh !important;        /* chiếm 40% màn hình */
+    min-height: 300px;
+    max-height: 50vh;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  /* 3. Cột phải (nội dung lý thuyết) chiếm phần còn lại */
+  .col-lg-8 {
+    height: calc(60vh - 60px) !important;  /* 60% còn lại trừ tab */
+    flex-grow: 1;
+  }
+
+  /* 4. Bỏ overflow hidden toàn trang trên mobile */
+  html, body {
+    overflow-x: hidden;
+    overflow-y: auto;        /* cho phép cuộn dọc */
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .tab-content,
+  #theoryTab,
+  #theoryTab > .row {
+    height: auto !important;
+    min-height: 100vh;
+  }
+
+  /* 5. Fix chiều cao iframe trên mobile */
+  #theoryContent iframe {
+    height: calc(60vh - 60px) !important;
+  }
+
+  /* 6. Placeholder chiếm toàn bộ khi chưa chọn */
+  #theoryPlaceholder {
+    height: calc(60vh - 60px);
+    padding: 2rem 1rem;
+  }
+
+  /* 7. Tab practice & irregular verbs vẫn full màn hình */
+  #practiceTab,
+  #irregularVerbsTab {
+    height: calc(100vh - 60px) !important;
+  }
+
+  /* 8. Nút tìm kiếm hạ thấp hơn chút tránh bị che */
+  .search-float-btn {
+    bottom: 80px;
+    right: 15px;
+  }
+}
+
+/* Tablet dọc (768px - 991px) có thể cho tỷ lệ đẹp hơn một chút */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  #leftPanel {
+    height: 45vh !important;
+  }
+  .col-lg-8 {
+    height: calc(55vh - 60px) !important;
+  }
+  #theoryContent iframe {
+    height: calc(55vh - 60px) !important;
+  }
+}
   </style>
 </head>
 <body>
